@@ -69,7 +69,7 @@ def processRow(row):
     cells = row.find_elements_by_tag_name('td')
     row_data = []
     for cell in cells:
-        cell_data = "".join(str(cell.get_attribute('innerText')).split()).upper().replace(',','')
+        cell_data = "".join(str(cell.get_attribute('innerText')).split()).upper().replace(',','').replace('....','')
         row_data.append(cell_data)
     return row_data
 
@@ -83,7 +83,10 @@ while (True):
         result = ""
         for currency in currency_list:
             curr = processCurrency(cd,kx,currency)
-            if (float(curr[2]) > threshold or float(curr[3]) > threshold):
+            if (True):
+            #if (float(curr[2]) > threshold or float(curr[3]) > threshold):
+                if 'XRP' in currency and abs(float(curr[2])) > 4:
+                    sendNotification('XRP' + str(processCurrency(cd,kx,currency)))
                 if result == "":
                     result = currency + " (" + str(curr[2]) + "," + str(curr[3]) + ")"
                 else:
@@ -93,3 +96,4 @@ while (True):
         myfile.write(str(datetime.now()) + "\t" + result + "\n")
         print result
         break
+cd_driver.quit()
